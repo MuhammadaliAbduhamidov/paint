@@ -1,4 +1,5 @@
 const canvas = document.querySelector("canvas");
+const sizeSlider = document.querySelector("#size-slider");
 const toolBtn = document.querySelectorAll(".tool"),
   fillColor = document.querySelector("#fill-color");
 
@@ -49,6 +50,15 @@ const drawCircle = (e) => {
   fillColor.checked ? ctx.fill() : ctx.stroke();
 };
 
+const drawTriangle = (e) => {
+  ctx.beginPath();
+  ctx.moveTo(prevMouseX, prevMouseY);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.lineTo(prevMouseX * 2 - e.offsetX, e.offsetY);
+  ctx.closePath();
+  fillColor.checked ? ctx.fill() : ctx.stroke();
+};
+
 const drawing = (e) => {
   if (!isDrawing) return;
   ctx.putImageData(snapshot, 0, 0);
@@ -62,6 +72,9 @@ const drawing = (e) => {
       break;
     case "circle":
       drawCircle(e);
+      break;
+    case "triangle":
+      drawTriangle(e);
       break;
 
     default:
@@ -81,6 +94,10 @@ const startDraw = (e) => {
 const stopDraw = () => {
   isDrawing = false;
 };
+
+sizeSlider.addEventListener("change", () => {
+  brushWidth = sizeSlider.value;
+});
 
 canvas.addEventListener("mousemove", drawing);
 canvas.addEventListener("mousedown", startDraw);
